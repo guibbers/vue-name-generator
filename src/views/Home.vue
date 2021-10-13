@@ -13,7 +13,7 @@
           <div class="col-md">
             <h5>
               Prefixos:
-              <span>{{ this.prefixes.length }}</span>
+              <span class="badge bg-primary">{{ this.prefixes.length }}</span>
             </h5>
             <div class="card">
               <div class="card-body">
@@ -23,21 +23,43 @@
                     v-for="prefix in prefixes"
                     :key="prefix"
                   >
-                    {{ prefix }}
+                    <div class="row">
+                      <div class="col-md text-start">
+                        {{ prefix }}
+                      </div>
+                      <div class="col-md text-end">
+                        <button
+                          class="btn btn-primary"
+                          @click="deletePrefix(prefix)"
+                        >
+                          <span class="fa fa-trash"></span>
+                        </button>
+                      </div>
+                    </div>
                   </li>
                 </ul>
                 <br />
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Digite o Prefixo"
-                />
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Digite o Prefixo"
+                    v-model="prefix"
+                    @keyup.enter="addPrefix(prefix)"
+                  />
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" @click="addPrefix(prefix)">
+                      <span class="fa fa-plus"></span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
           <div class="col-md">
             <h5>
-              Sufixos: <span>{{ this.sufixes.length }}</span>
+              Sufixos:
+              <span class="badge bg-primary">{{ this.sufixes.length }}</span>
             </h5>
             <div class="card">
               <div class="card-body">
@@ -47,15 +69,34 @@
                     v-for="sufix in sufixes"
                     :key="sufix"
                   >
-                    {{ sufix }}
+                    <div class="row">
+                      <div class="col-md text-start">{{ sufix }}</div>
+                      <div class="col-md text-end">
+                        <button
+                          class="btn btn-primary"
+                          @click="deleteSufix(sufix)"
+                        >
+                          <span class="fa fa-trash"></span>
+                        </button>
+                      </div>
+                    </div>
                   </li>
                 </ul>
                 <br />
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Digite o Sufixo"
-                />
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Digite o Sufixo"
+                    v-model="sufix"
+                    @keyup.enter="addSufix(sufix)"
+                  />
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" @click="addSufix(sufix)">
+                      <span class="fa fa-plus"></span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -103,7 +144,37 @@ export default {
         'FlightStation',
         'FlightMart',
       ],
+      prefix: '',
+      sufix: '',
     }
+  },
+  methods: {
+    addPrefix(prefix) {
+      this.prefixes.push(prefix)
+      this.prefix = ''
+      this.generateDomain()
+    },
+    deletePrefix(prefix) {
+      this.prefixes.splice(this.prefixes.indexOf(prefix), 1)
+      this.generateDomain()
+    },
+    addSufix(sufix) {
+      this.sufixes.push(sufix)
+      this.sufix = ''
+      this.generateDomain()
+    },
+    deleteSufix(sufix) {
+      this.sufixes.splice(this.sufixes.indexOf(sufix), 1)
+      this.generateDomain()
+    },
+    generateDomain() {
+      this.domains = []
+      for (const prefix of this.prefixes) {
+        for (const sufix of this.sufixes) {
+          this.domains.push(prefix + sufix)
+        }
+      }
+    },
   },
 }
 </script>
